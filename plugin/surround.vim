@@ -241,6 +241,17 @@ function! s:wrap(string,char,type,...)
   elseif newchar !~ '\a'
     let before = newchar
     let after  = newchar
+  elseif newchar == 'i'
+    " Insert text before and close with appropriate pairs
+    let before = input('before: ')
+    let index = len(before) - 1
+    let after = ''
+    let p = '[]{}<>()''''""'
+    while index >= 0 && stridx(p, before[index]) >= 0
+        \ && (stridx(p, before[index]) % 2) == 0
+      let after .= p[stridx(p, before[index]) + 1]
+      let index -= 1
+    endwhile
   else
     let before = ''
     let after  = ''

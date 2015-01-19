@@ -252,6 +252,7 @@ function! s:wrap(string,char,type,...)
       let after .= p[stridx(p, before[index]) + 1]
       let index -= 1
     endwhile
+    let s:input = before."\<CR>"
   else
     let before = ''
     let after  = ''

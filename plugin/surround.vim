@@ -253,6 +253,9 @@ function! s:wrap(string,char,type,removed,special)
     let index = len(before) - 1
     let after = ''
     let p = '[]{}<>()''''""  '
+    if stridx(p, before[-1:-1]) == -1
+      let before .= '('
+    endif
     while index >= 0 && stridx(p, before[index]) >= 0
         \ && (stridx(p, before[index]) % 2) == 0
       let after .= p[stridx(p, before[index]) + 1]

@@ -250,12 +250,12 @@ function! s:wrap(string,char,type,removed,special)
   elseif newchar == 'i'
     " Insert text before and close with appropriate pairs
     let before = input('before: ')
-    let index = len(before) - 1
-    let after = ''
     let p = '[]{}<>()''''""  '
     if stridx(p, before[-1:-1]) == -1
       let before .= '('
     endif
+    let index = len(before) - 1
+    let after = ''
     while index >= 0 && stridx(p, before[index]) >= 0
         \ && (stridx(p, before[index]) % 2) == 0
       let after .= p[stridx(p, before[index]) + 1]

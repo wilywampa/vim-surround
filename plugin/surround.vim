@@ -256,11 +256,11 @@ function! s:wrap(string,char,type,removed,special)
     endif
     let index = len(before) - 1
     let after = ''
-    while index >= 0 && stridx(p, before[index]) >= 0
-        \ && (stridx(p, before[index]) % 2) == 0
-      let after .= p[stridx(p, before[index]) + 1]
-      let index -= 1
-    endwhile
+    for index in range(len(before) - 1, 0, -1)
+      if stridx(p, before[index]) % 2 == 0
+        let after .= p[stridx(p, before[index]) + 1]
+      endif
+    endfor
     let s:input = before."\<CR>"
   else
     let before = ''

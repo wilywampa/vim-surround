@@ -124,6 +124,14 @@ function! s:process(string)
   return s
 endfunction
 
+function! s:SID()
+  return matchstr(expand('<sfile>'), '<SNR>\d\+_\zeSID$')
+endfunction
+function! s:input_complete(arglead, _, __)
+  return filter(map(range(histnr('@'), 1, -1), 'histget("@", v:val)'),
+      \ "stridx(tolower(v:val), a:arglead) == 0")
+endfunction
+
 function! s:wrap(string,char,type,removed,special)
   let keeper = a:string
   let newchar = a:char
@@ -249,7 +257,7 @@ function! s:wrap(string,char,type,removed,special)
     let after  = newchar
   elseif newchar == 'i'
     " Insert text before and close with appropriate pairs
-    let before = input('before: ')
+    let before = input('before: ', '', 'customlist,'.s:SID().'input_complete')
     let p = '[]{}<>()''''""  '
     if stridx(p, before[-1:-1]) == -1
       let before .= '('

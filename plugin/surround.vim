@@ -341,6 +341,7 @@ function! s:insert(...) " {{{1
   let cb_save = &clipboard
   set clipboard-=unnamed clipboard-=unnamedplus
   let reg_save = @@
+  try
   call setreg('"',"\r",'v')
   call s:wrapreg('"',char,"",linemode)
   " If line mode is used and the surrounding consists solely of a suffix,
@@ -364,8 +365,10 @@ function! s:insert(...) " {{{1
   endif
   norm! `]
   call search('\r','bW')
+  finally
   let @@ = reg_save
   let &clipboard = cb_save
+  endtry
   return "\<Del>"
 endfunction " }}}1
 
@@ -405,6 +408,7 @@ function! s:dosurround(...) " {{{1
   let append = ""
   let original = getreg('"')
   let otype = getregtype('"')
+  try
   call setreg('"',"")
   let strcount = (scount == 1 ? "" : scount)
   if char == '/'
@@ -479,9 +483,11 @@ function! s:dosurround(...) " {{{1
   if getline('.') =~ '^\s\+$' && keeper =~ '^\s*\n'
     silent norm! cc
   endif
-  call setreg('"',original,otype)
   let s:lastdel = removed
+  finally
+  call setreg('"',original,otype)
   let &clipboard = cb_save
+  endtry
   if newchar == ""
     silent! call repeat#set("\<Plug>Dsurround".char,scount)
   else
@@ -515,6 +521,7 @@ function! s:opfunc(type,...) " {{{1
   set clipboard-=unnamed clipboard-=unnamedplus
   let reg_save = getreg(reg)
   let reg_type = getregtype(reg)
+  try
   let type = a:type
   if a:type == "char"
     silent exe 'norm! v`[o`]"'.reg.'y'
@@ -556,9 +563,11 @@ function! s:opfunc(type,...) " {{{1
   if type ==# 'V' || (getreg(reg) =~ '\n' && type ==# 'v')
     call s:reindent()
   endif
+  finally
   call setreg(reg,reg_save,reg_type)
   let &selection = sel_save
   let &clipboard = cb_save
+  endtry
   if a:type =~ '^\d\+$'
     silent! call repeat#set("\<Plug>Y".(a:0 && a:1 ? "S" : "s")."surround".char.s:input,a:type)
   else

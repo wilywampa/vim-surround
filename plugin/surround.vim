@@ -257,7 +257,8 @@ function! s:wrap(string,char,type,removed,special)
     let after  = newchar
   elseif newchar == 'i'
     " Insert text before and close with appropriate pairs
-    let before = input('before: ', '', 'customlist,'.s:SID().'input_complete')
+    let before = input('before: ', '', 'customlist,'.
+        \ get(g:, 'surround_input_complete', s:SID().'input_complete'))
     let p = '[]{}<>()''''""  '
     if stridx(p, before[-1:-1]) == -1
       let before .= '('
